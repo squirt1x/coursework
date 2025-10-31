@@ -1,0 +1,334 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans:wght@400;600&display=swap');
+
+// 🎨 Переменные
+$color-accent: #00b207;
+$color-accent-hover: #009606;
+$color-bg: #dae5da;
+$color-text: #1a1a1a;
+$color-grey: #999;
+
+// =====================
+// Базовые стили
+// =====================
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', 'Noto Sans', sans-serif;
+  background-color: $color-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.auth-bg {
+  background: rgba(218, 229, 218, 0.95);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// =====================
+// Карточка регистрации / входа
+// =====================
+.auth-card {
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #f2f2f2;
+  box-shadow: 0 0 56px rgba(0, 38, 3, 0.08);
+  width: 600px;
+  height: 380px;
+  padding: 40px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+// =====================
+// Кнопка закрытия
+// =====================
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  z-index: 10;
+
+  img {
+    width: 18px;
+    height: 18px;
+    transition: filter 0.3s ease;
+  }
+
+  &:hover {
+    background-color: $color-accent;
+    transform: translateY(-1px);
+  }
+
+  &:hover img {
+    filter: brightness(0) invert(1);
+  }
+}
+
+// =====================
+// Заголовок
+// =====================
+.auth-header {
+  margin-bottom: 16px;
+
+  .auth-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: $color-text;
+    white-space: nowrap;
+  }
+
+  .auth-link {
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    transition: color 0.3s ease;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background-color: rgba(0, 178, 7, 0.4);
+      border-radius: 999px;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 1;
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+
+    &.active::after {
+      opacity: 0 !important; // 🔹 отключаем дубль под активной
+    }
+  }
+}
+
+// =====================
+// Основная линия под активной вкладкой
+// =====================
+.main-underline {
+  position: absolute;
+  height: 6px;
+  background: $color-accent;
+  border-radius: 999px;
+  transition: left 0.25s ease, width 0.25s ease, top 0.25s ease;
+  z-index: 5;
+  top: 70px;
+}
+
+// =====================
+// Форма
+// =====================
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    padding: 14px 16px;
+    background: white;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+
+    .input-field {
+      font-family: inherit;
+      font-size: 16px;
+      color: $color-text;
+      border: none;
+      outline: none;
+      width: 100%;
+
+      &::placeholder {
+        color: $color-grey;
+      }
+    }
+
+    .eye-button {
+      width: 20px;
+      height: 20px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        display: block;
+        transition: opacity 0.2s ease, filter 0.2s ease;
+      }
+
+      &:hover img {
+        opacity: 0.7;
+      }
+
+      &.active img {
+        opacity: 1;
+        filter: invert(43%) sepia(92%) saturate(2089%) hue-rotate(96deg)
+          brightness(94%) contrast(93%);
+      }
+    }
+  }
+
+  // Плавное скрытие поля подтверждения
+  .input-wrapper.hidden {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+}
+
+// =====================
+// Кнопка регистрации / входа
+// =====================
+.submit-button {
+  background: $color-accent;
+  color: white;
+  border: none;
+  border-radius: 43px;
+  padding: 14px 32px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: $color-accent-hover;
+  }
+}
+
+// =====================
+// Медиа-запросы
+// =====================
+
+@media (max-width: 768px) {
+  .auth-card {
+    width: 500px;
+    height: 340px;
+    padding: 32px 48px;
+  }
+
+  .close-button {
+    right: 8px;
+    top: 8px;
+    width: 36px;
+    height: 36px;
+
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .auth-header .auth-title {
+    font-size: 28px;
+  }
+
+  .main-underline {
+    height: 5px;
+    top: 68px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    min-height: 320px;
+    padding: 24px;
+  }
+
+  .close-button {
+    right: 6px;
+    top: 6px;
+    width: 32px;
+    height: 32px;
+
+    img {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .auth-header .auth-title {
+    font-size: 22px;
+  }
+
+  .main-underline {
+    top: 64px;
+    height: 5px;
+  }
+
+  .auth-form {
+    gap: 10px;
+  }
+
+  .input-wrapper {
+    padding: 12px 14px;
+  }
+
+  .input-field {
+    font-size: 14px;
+  }
+
+  .submit-button {
+    font-size: 13px;
+    padding: 12px 28px;
+  }
+}
+
+@media (max-width: 360px) {
+  .auth-header .auth-title {
+    font-size: 20px;
+  }
+
+  .main-underline {
+    height: 4px;
+    top: 60px;
+  }
+
+  .submit-button {
+    font-size: 12px;
+    padding: 10px 24px;
+  }
+}
