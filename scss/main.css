@@ -36,8 +36,8 @@ body {
   position: relative;
   background-image: url("../images/hero.png");
   background-repeat: no-repeat;
-  background-size: 1070px auto;
-  background-position: right top;
+  background-size: 55% auto;
+  background-position: right center;
 }
 
 .hero .hero-content {
@@ -56,9 +56,6 @@ body {
 }
 
 .hero .hero-text {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 760px;
-          flex: 0 0 760px;
   max-width: 760px;
   text-align: left;
 }
@@ -230,10 +227,11 @@ body {
 }
 
 .footer .footer-line {
-  width: 100%;
-  max-width: 1319px;
+  width: 50%;
+  max-width: clamp(200px, 100%, 1319px);
   height: 1px;
-  background-color: black;
+  background-color: grey;
+  opacity: 0.5;
   margin: 0 auto 24px;
 }
 
@@ -245,22 +243,37 @@ body {
   line-height: 1.5;
 }
 
+@media (max-width: 1700px) {
+  .hero .hero-text .hero-title {
+    font-size: 60px;
+  }
+}
+
 @media (max-width: 1400px) {
   .container {
     padding: 0 60px;
-  }
-  .hero {
-    background-size: 900px auto;
   }
   .cards .cards-grid {
     gap: 60px;
   }
 }
 
+@media (max-width: 1200px) {
+  .hero .hero-text {
+    max-width: 400px;
+  }
+}
+
 @media (max-width: 1024px) {
+  .cards {
+    padding: 60px 0 60px;
+  }
+  .footer {
+    padding: 40px 0 40px;
+  }
   .hero {
-    background-size: 700px auto;
-    background-position: center top;
+    background: none;
+    padding: 60px 0 60px;
   }
   .hero .hero-content {
     -webkit-box-orient: vertical;
@@ -287,24 +300,6 @@ body {
   }
   .cards .card {
     height: 400px;
-  }
-}
-
-@media (max-width: 1025px) {
-  .hero {
-    background: none;
-    padding: 60px 0 60px;
-  }
-  .hero .hero-text {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 0 0px;
-            flex: 0 0 0;
-  }
-  .cards {
-    padding: 60px 0 60px;
-  }
-  .footer {
-    padding: 40px 0 40px;
   }
 }
 
