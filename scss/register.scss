@@ -1,15 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Noto+Sans:wght@400;600&display=swap');
 
-// 🎨 Переменные
 $color-accent: #00b207;
 $color-accent-hover: #009606;
 $color-bg: #dae5da;
 $color-text: #1a1a1a;
 $color-grey: #999;
 
-// =====================
-// Базовые стили
-// =====================
 * {
   margin: 0;
   padding: 0;
@@ -34,9 +30,6 @@ body {
   align-items: center;
 }
 
-// =====================
-// Карточка регистрации / входа
-// =====================
 .auth-card {
   position: relative;
   background: #fff;
@@ -89,9 +82,6 @@ body {
   }
 }
 
-// =====================
-// Заголовок
-// =====================
 .auth-header {
   margin-bottom: 16px;
 
@@ -127,27 +117,21 @@ body {
     }
 
     &.active::after {
-      opacity: 0 !important; // 🔹 отключаем дубль под активной
+      opacity: 0 !important;
     }
   }
 }
 
-// =====================
-// Основная линия под активной вкладкой
-// =====================
 .main-underline {
   position: absolute;
   height: 6px;
   background: $color-accent;
   border-radius: 999px;
-  transition: left 0.25s ease, width 0.25s ease, top 0.25s ease;
-  z-index: 5;
   top: 70px;
+  z-index: 5;
+  transition: left 0.25s ease, width 0.25s ease, top 0.25s ease;
 }
 
-// =====================
-// Форма
-// =====================
 .auth-form {
   display: flex;
   flex-direction: column;
@@ -203,18 +187,8 @@ body {
       }
     }
   }
-
-  // Плавное скрытие поля подтверждения
-  .input-wrapper.hidden {
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-  }
 }
 
-// =====================
-// Кнопка регистрации / входа
-// =====================
 .submit-button {
   background: $color-accent;
   color: white;
@@ -232,10 +206,6 @@ body {
   }
 }
 
-// =====================
-// Медиа-запросы
-// =====================
-
 @media (max-width: 768px) {
   .auth-card {
     width: 500px;
@@ -249,86 +219,26 @@ body {
     width: 36px;
     height: 36px;
 
-    img {
-      width: 16px;
-      height: 16px;
-    }
+    img { width: 16px; height: 16px; }
   }
 
-  .auth-header .auth-title {
-    font-size: 28px;
-  }
-
-  .main-underline {
-    height: 5px;
-    top: 68px;
-  }
+  .auth-header .auth-title { font-size: 28px; }
+  .main-underline { height: 5px; top: 68px; }
 }
 
 @media (max-width: 480px) {
-  body {
-    padding: 10px;
-  }
-
-  .auth-card {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    min-height: 320px;
-    padding: 24px;
-  }
-
-  .close-button {
-    right: 6px;
-    top: 6px;
-    width: 32px;
-    height: 32px;
-
-    img {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
-  .auth-header .auth-title {
-    font-size: 22px;
-  }
-
-  .main-underline {
-    top: 64px;
-    height: 5px;
-  }
-
-  .auth-form {
-    gap: 10px;
-  }
-
-  .input-wrapper {
-    padding: 12px 14px;
-  }
-
-  .input-field {
-    font-size: 14px;
-  }
-
-  .submit-button {
-    font-size: 13px;
-    padding: 12px 28px;
-  }
+  .auth-card { width: 100%; max-width: 400px; height: auto; min-height: 320px; padding: 24px; }
+  .close-button { right: 6px; top: 6px; width: 32px; height: 32px; img { width: 14px; height: 14px; } }
+  .auth-header .auth-title { font-size: 22px; }
+  .main-underline { top: 64px; height: 5px; }
+  .auth-form { gap: 10px; }
+  .input-wrapper { padding: 12px 14px; }
+  .input-field { font-size: 14px; }
+  .submit-button { font-size: 13px; padding: 12px 28px; }
 }
 
 @media (max-width: 360px) {
-  .auth-header .auth-title {
-    font-size: 20px;
-  }
-
-  .main-underline {
-    height: 4px;
-    top: 60px;
-  }
-
-  .submit-button {
-    font-size: 12px;
-    padding: 10px 24px;
-  }
+  .auth-header .auth-title { font-size: 20px; }
+  .main-underline { height: 4px; top: 60px; }
+  .submit-button { font-size: 12px; padding: 10px 24px; }
 }

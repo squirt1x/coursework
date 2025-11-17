@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Code — Рабочая область</title>
+  <link rel="stylesheet" href="/lishnee.css">
+  <link rel="stylesheet" href="/scss/workspace.css">
+  <script src="/workspace/workspace.js" defer></script>
+</head>
+<body>
+  
+  <div class="decorative-leaf decorative-leaf-top-left">
+    <img src="/images/vegetables-left-up.png" alt="Decorative leaf top left">
+  </div>
+
+  <div class="decorative-leaf decorative-leaf-top-right">
+    <img src="/images/vegetables-right-up.png" alt="Decorative leaf top right">
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <img src="/images/logo.png" alt="Food Code" class="logo-img" />
+      </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+      <button class="add-recipe-btn">Добавить рецепт</button>
+      <div class="user-menu">
+        <div class="user-icon">
+          <img src="/images/icon.svg" alt="Профиль" />
+        </div>
+        <div class="user-dropdown">
+          <button class="logout-btn">Выйти</button>
+        </div>
+      </div>
+    </nav>
+    <!-- Модальное окно конструктора рецепта -->
+    <div class="recipe-modal-overlay hidden">
+      <div class="recipe-modal">
+        <!-- Кнопка закрытия -->
+        <button class="close-button">
+          <img src="/images/close.svg" alt="Закрыть" />
+        </button>
+
+        <h2 class="modal-title">Создание рецепта</h2>
+
+        <form class="recipe-form">
+          <div class="form-group">
+            <label for="recipe-name">Название блюда</label>
+            <input type="text" id="recipe-name" placeholder="Введите название рецепта" />
+          </div>
+
+          <div class="form-group">
+            <label for="recipe-category">Категория</label>
+            <select id="recipe-category">
+              <option>Завтрак</option>
+              <option>Обед</option>
+              <option>Ужин</option>
+              <option>Десерт</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="recipe-photo">Фото блюда</label>
+            <input type="file" id="recipe-photo" accept="image/*" />
+          </div>
+
+          <div class="form-group">
+            <label for="video-link">Ссылка на видео (опционально)</label>
+            <input type="url" id="video-link" placeholder="https://..." />
+          </div>
+
+          <div class="form-section">
+            <h3>Ингредиенты</h3>
+            <div class="ingredients-list"></div>
+            <button type="button" class="add-ingredient-btn">+ Добавить ингредиент</button>
+          </div>
+
+          <div class="form-section">
+            <h3>Шаги приготовления</h3>
+            <div class="steps-list"></div>
+            <button type="button" class="add-step-btn">+ Добавить шаг</button>
+          </div>
+
+          <button type="button" class="save-recipe-btn">Сохранить</button>
+        </form>
+      </div>
+    </div>
+
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <button class="filter-button">
+          <span>Фильтр</span>
+          <img src="/images/Filter.png" alt="filter" />
+        </button>
+
+        <div class="filter-section hidden">
+          <!-- Категории -->
+          <div class="filter-group">
+            <div class="filter-header">
+              <h3>Категория</h3>
+              <img src="/images/arrow-down.png" alt="arrow" />
+            </div>
+
+            <!-- отступ 20px обеспечивается стилями -->
+            <div class="filter-content">
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox" value="Завтрак" />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Завтрак</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox" value="Обед" />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Обед</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox" value="Ужин" />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Ужин</span>
+              </label>
+
+              <label class="checkbox-label">
+                <input type="checkbox" class="checkbox" value="Десерт" />
+                <span class="checkbox-custom"></span>
+                <span class="checkbox-text">Десерт</span>
+              </label>
+            </div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-header">
+              <h3>Калорийность</h3>
+              <img src="/images/arrow-down.png" alt="arrow" />
+            </div>
+
+            <div class="filter-content">
+              <div class="calorie-inputs">
+                <div class="calorie-field">
+                  <label>От</label>
+                  <input type="number" id="calorie-min" value="0" min="0" max="3000" step="10">
+                </div>
+
+                <div class="calorie-field">
+                  <label>До</label>
+                  <input type="number" id="calorie-max" value="3000" min="0" max="3000" step="10">
+                </div>
+              </div>
+            </div>
+          </div>
+        <button class="apply-button">Применить</button>
+        </div>
+      </aside>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <div class="search-sort-bar">
+          <div class="sort-section">
+            <span class="sort-label">Сортировка:</span>
+            <div class="dropdown">
+              <span>Сначала новые</span>
+              <img src="/images/arrow-down.png" alt="arrow" />
+              <ul class="dropdown-menu">
+                <li data-sort="date-desc">Сначала новые</li>
+                <li data-sort="date-asc">Сначала старые</li>
+                <li data-sort="name-asc">По названию (A→Я)</li>
+                <li data-sort="name-desc">По названию (Я→А)</li>
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="search-section">
+            <div class="search-input">
+              <img src="/images/Search.png" alt="search" />
+              <input type="text" placeholder="Поиск" />
+            </div>
+            <button class="search-button">Найти</button>
+          </div>
+        </div>
+
+        <div class="recipe-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Decorative Leaves -->
+  <div class="decorative-leaf decorative-leaf-left">
+    <img src="/images/leaf-left.png" alt="Decorative leaf" />
+  </div>
+  <div class="decorative-leaf decorative-leaf-bottom">
+    <img src="/images/leaf-bottom.png" alt="Decorative leaf" />
+  </div>
+  
+  <div class="recipe-view-overlay hidden">
+  <div class="recipe-view-modal">
+    <button class="close-button"><img src="/images/close.svg" alt="Закрыть"></button>
+
+    <div class="recipe-view-content">
+      <div class="recipe-main">
+        <img class="recipe-view-image" src="/images/default-dish.png" alt="">
+        <h2 class="recipe-view-title"></h2>
+
+        <div class="recipe-meta">
+          <span class="category"></span>
+          <span class="calories"></span>
+          <span class="steps">Количество шагов: <span class="steps-count"></span></span>
+        </div>
+      </div>
+
+      <!-- Новый горизонтальный контейнер -->
+      <div class="recipe-details-row">
+        <div class="ingredients-section">
+          <h3 class="ingredients-title">Ингредиенты:</h3>
+            <ul class="ingredients-list-view"></ul>
+        </div>
+
+        <div class="recipe-video-section hidden">
+          <h3>Видео:</h3>
+          <div class="video-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="nav-arrow prev-arrow">
+    <img src="/images/arrow-left.svg" alt="Предыдущий">
+  </button>
+  <button class="nav-arrow next-arrow">
+    <img src="/images/arrow-right.svg" alt="Следующий">
+  </button>
+</div>
+
+
+ 
+</body>
+</html>

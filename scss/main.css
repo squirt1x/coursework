@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Noto+Sans:wght@400;500;600&display=swap");
 * {
   margin: 0;
   padding: 0;
@@ -6,7 +7,7 @@
 }
 
 body {
-  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: 'Poppins', 'Noto Sans', sans-serif;
   background-color: #dae5da;
   color: #1a1a1a;
   overflow-x: hidden;
@@ -33,6 +34,10 @@ body {
 .hero {
   padding: 60px 0 120px;
   position: relative;
+  background-image: url("../images/hero.png");
+  background-repeat: no-repeat;
+  background-size: 1070px auto;
+  background-position: right top;
 }
 
 .hero .hero-content {
@@ -52,9 +57,10 @@ body {
 
 .hero .hero-text {
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 45%;
-          flex: 0 0 45%;
-  max-width: 596px;
+      -ms-flex: 0 0 760px;
+          flex: 0 0 760px;
+  max-width: 760px;
+  text-align: left;
 }
 
 .hero .hero-text .hero-label {
@@ -79,7 +85,7 @@ body {
   line-height: 1.5;
   color: grey;
   margin-bottom: 48px;
-  max-width: 408px;
+  max-width: 480px;
 }
 
 .hero .hero-text .btn-primary {
@@ -113,31 +119,6 @@ body {
   height: 24px;
 }
 
-.hero .hero-image {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.hero .hero-image img {
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  -o-object-fit: contain;
-     object-fit: contain;
-  -webkit-filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-          filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
-}
-
 .cards {
   padding: 60px 0 120px;
   position: relative;
@@ -165,8 +146,8 @@ body {
 }
 
 .cards .card:hover {
-  -webkit-transform: translateY(-8px);
-          transform: translateY(-8px);
+  -webkit-transform: translateY(-6px);
+          transform: translateY(-6px);
 }
 
 .cards .card .card-bg {
@@ -216,7 +197,7 @@ body {
 }
 
 .cards .card .card-content .card-title {
-  font-size: 40px;
+  font-size: 39px;
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 16px;
@@ -268,12 +249,19 @@ body {
   .container {
     padding: 0 60px;
   }
+  .hero {
+    background-size: 900px auto;
+  }
   .cards .cards-grid {
     gap: 60px;
   }
 }
 
 @media (max-width: 1024px) {
+  .hero {
+    background-size: 700px auto;
+    background-position: center top;
+  }
   .hero .hero-content {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -282,10 +270,6 @@ body {
     gap: 40px;
   }
   .hero .hero-text {
-    -webkit-box-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    max-width: 100%;
     text-align: center;
   }
   .hero .hero-text .hero-title {
@@ -303,6 +287,24 @@ body {
   }
   .cards .card {
     height: 400px;
+  }
+}
+
+@media (max-width: 1025px) {
+  .hero {
+    background: none;
+    padding: 60px 0 60px;
+  }
+  .hero .hero-text {
+    -webkit-box-flex: 0;
+        -ms-flex: 0 0 0px;
+            flex: 0 0 0;
+  }
+  .cards {
+    padding: 60px 0 60px;
+  }
+  .footer {
+    padding: 40px 0 40px;
   }
 }
 
