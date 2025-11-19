@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let editingRecipeId = null;
   let ingredientsDBCache = null;
-  
 
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -211,7 +210,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (photoFile) {
       finalImage = await fileToBase64(photoFile);
     } else if (editingRecipeId) {
-      // режем старое фото рецепта
       const all = JSON.parse(localStorage.getItem("recipes")) || [];
       const oldRecipe = all.find((r) => r.id === editingRecipeId);
       finalImage = oldRecipe?.image || defaultImage;
