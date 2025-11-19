@@ -34,9 +34,9 @@ body {
 .hero {
   padding: 60px 0 120px;
   position: relative;
-  background-image: url("../images/hero.png");
+  background-image: url("/images/hero.png");
   background-repeat: no-repeat;
-  background-size: 55% auto;
+  background-size: clamp(400px, 55%, 1000px) auto;
   background-position: right center;
 }
 
@@ -254,7 +254,7 @@ body {
     padding: 0 60px;
   }
   .cards .cards-grid {
-    gap: 60px;
+    gap: 20px;
   }
 }
 

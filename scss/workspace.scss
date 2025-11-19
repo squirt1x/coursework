@@ -16,6 +16,7 @@ body {
   background-color: $bg;
   min-height: 100vh;
   overflow-x: hidden;
+  scrollbar-color: #00b207 #f1f1f1;
 }
 
 .container {
@@ -77,6 +78,7 @@ body {
     transform: translateY(0);
   }
 }
+
 
 .user-menu {
   position: relative;
@@ -164,7 +166,7 @@ body {
 
     &:hover { background: darken(grey, 8%); }
   }
-
+  
   .filter-section {
     display: flex;
     flex-direction: column;
@@ -800,7 +802,6 @@ body {
     max-height: 90vh;
     overflow-y: auto;
     scrollbar-width: thin;
-    scrollbar-color: #00b207 #f1f1f1;
     padding: 35px 40px;
     position: relative;
     transform: scale(0.96);

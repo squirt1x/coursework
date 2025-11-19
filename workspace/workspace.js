@@ -31,16 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let editingRecipeId = null;
   let ingredientsDBCache = null;
+  
 
   const fileToBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(reader.result.toString());
       reader.onerror = reject;
       reader.readAsDataURL(file);
     });
 
-  async function fetchIngredientsDB() {
+  const fetchIngredientsDB = async () => {
     if (ingredientsDBCache) return ingredientsDBCache;
     try {
       const res = await fetch("https://4309909664414cc8.mokky.dev/ingredients");
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ingredientsDBCache = [];
       return [];
     }
-  }
+  };
 
   const findIngredientInDBByName = (name) => {
     if (!name) return null;
@@ -205,9 +206,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (hasError) return;
+    let finalImage;
 
-    let base64Image = defaultImage;
-    if (photoFile) base64Image = await fileToBase64(photoFile);
+    if (photoFile) {
+      finalImage = await fileToBase64(photoFile);
+    } else if (editingRecipeId) {
+      // режем старое фото рецепта
+      const all = JSON.parse(localStorage.getItem("recipes")) || [];
+      const oldRecipe = all.find((r) => r.id === editingRecipeId);
+      finalImage = oldRecipe?.image || defaultImage;
+    } else {
+      finalImage = defaultImage;
+    }
 
     await fetchIngredientsDB();
 
@@ -234,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ...recipes[idx],
           name,
           category,
-          image: base64Image,
+          image: finalImage,
           video: videoLink || null,
           ingredients: ingredientsWithCals,
           steps,
@@ -247,7 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
         userId,
         name,
         category,
-        image: base64Image,
+        image: finalImage,
         video: videoLink || null,
         ingredients: ingredientsWithCals,
         steps,
@@ -260,7 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderRecipes(getUserRecipes());
   });
 
-  function renderRecipes(recipes) {
+  const renderRecipes = (recipes) => {
     recipeList.innerHTML = "";
 
     if (!recipes.length) {
@@ -308,9 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       recipeList.appendChild(card);
     });
-  }
+  };
 
-  function openEditModal(recipe) {
+  const openEditModal = (recipe) => {
     editingRecipeId = recipe.id;
     modalOverlay.classList.add("visible");
     modalOverlay.classList.remove("hidden");
@@ -332,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
     recipe.steps.forEach((s) =>
       stepsList.appendChild(createStepRow(s.title, s.desc))
     );
-  }
+  };
 
   (function initSort() {
     const sortDropdown = document.querySelector(".sort-section .dropdown");
@@ -466,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const isYouTubeLink = (url) => /youtu(\.be|be\.com)/.test(url);
 
-    function renderStep(index) {
+    const renderStep = (index) => {
       if (!currentRecipe || !currentRecipe.steps) return;
       if (index < 0 || index >= currentRecipe.steps.length) return;
 
@@ -508,9 +518,9 @@ document.addEventListener("DOMContentLoaded", () => {
       ).textContent = `Шаг ${index + 1} из ${currentRecipe.steps.length}`;
 
       updateArrows();
-    }
+    };
 
-    function renderPreview(recipe) {
+    const renderPreview = (recipe) => {
       mode = "preview";
       currentStep = -1;
       currentRecipe = recipe;
@@ -584,9 +594,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       updateArrows();
-    }
+    };
 
-    function updateArrows() {
+    const updateArrows = () => {
       if (mode === "preview") {
         prevArrow.style.display = "none";
         nextArrow.style.display = currentRecipe.steps.length ? "flex" : "none";
@@ -595,7 +605,7 @@ document.addEventListener("DOMContentLoaded", () => {
         nextArrow.style.display =
           currentStep < currentRecipe.steps.length - 1 ? "flex" : "none";
       }
-    }
+    };
 
     prevArrow.addEventListener("click", () => {
       if (!currentRecipe) return;
@@ -648,7 +658,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         content.style.display = isOpen ? "none" : "block";
         arrow.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
-
       });
     });
   })();
