@@ -33,25 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
   let ingredientsDBCache = null;
 
   const fileToBase64 = (file) =>
-    new Promise((resolve, reject) => {
+    new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.toString());
-      reader.onerror = reject;
+      reader.onload = () => resolve(reader.result);
       reader.readAsDataURL(file);
     });
 
   const fetchIngredientsDB = async () => {
     if (ingredientsDBCache) return ingredientsDBCache;
-    try {
-      const res = await fetch("https://4309909664414cc8.mokky.dev/ingredients");
-      const data = await res.json();
-      ingredientsDBCache = Array.isArray(data) ? data : [];
-      ingredientsDBCache.forEach((i) => (i._nameLower = i.name.toLowerCase().trim()));
-      return ingredientsDBCache;
-    } catch {
-      ingredientsDBCache = [];
-      return [];
-    }
+    const res = await fetch("https://4309909664414cc8.mokky.dev/ingredients");
+    const data = await res.json();
+    ingredientsDBCache = data || [];
+    ingredientsDBCache.forEach((i) => {
+      i._nameLower = (i.name || "").toLowerCase().trim();
+    });
+    return ingredientsDBCache;
   };
 
   const findIngredientInDBByName = (name) => {
@@ -65,6 +61,10 @@ document.addEventListener("DOMContentLoaded", () => {
       null
     );
   };
+
+  const loadRecipes = () => JSON.parse(localStorage.getItem("recipes") || "[]");
+  const saveRecipes = (arr) => localStorage.setItem("recipes", JSON.stringify(arr));
+  const getCurrentUser = () => JSON.parse(localStorage.getItem("currentUser") || "null");
 
   const clearErrors = () => modal.querySelectorAll(".error-message").forEach((el) => el.remove());
   const clearFieldError = (input) => {
@@ -80,18 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const getUserRecipes = () => {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    const all = JSON.parse(localStorage.getItem("recipes")) || [];
+    const currentUser = getCurrentUser();
+    const all = loadRecipes();
     return all.filter((r) => r.userId === currentUser?.id);
   };
 
   const createIngredientRow = (name = "", weight = "") => {
     const row = document.createElement("div");
     row.className = "dynamic-row";
-    row.innerHTML = `
-      <input type="text" placeholder="Название ингредиента" class="ingredient-name" value="${name}" />
-      <input type="number" placeholder="Масса (г)" class="ingredient-weight" min="1" value="${weight}" />
-      <button type="button" class="remove-btn">×</button>`;
+    row.innerHTML = `<input type="text" placeholder="Название ингредиента" class="ingredient-name" value="${name}" />
+                     <input type="number" placeholder="Масса (г)" class="ingredient-weight" min="1" value="${weight}" />
+                     <button type="button" class="remove-btn">×</button>`;
     row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
     return row;
   };
@@ -99,10 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const createStepRow = (title = "", desc = "") => {
     const row = document.createElement("div");
     row.className = "dynamic-row";
-    row.innerHTML = `
-      <input type="text" placeholder="Название шага" class="step-title" value="${title}" />
-      <input type="text" placeholder="Описание шага" class="step-desc" value="${desc}" />
-      <button type="button" class="remove-btn">×</button>`;
+    row.innerHTML = `<input type="text" placeholder="Название шага" class="step-title" value="${title}" />
+                     <input type="text" placeholder="Описание шага" class="step-desc" value="${desc}" />
+                     <button type="button" class="remove-btn">×</button>`;
     row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
     return row;
   };
@@ -135,9 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   closeBtn.addEventListener("click", closeModal);
 
-  addIngredientBtn.addEventListener("click", () =>
-    ingredientsList.appendChild(createIngredientRow())
-  );
+  addIngredientBtn.addEventListener("click", () => ingredientsList.appendChild(createIngredientRow()));
   addStepBtn.addEventListener("click", () => stepsList.appendChild(createStepRow()));
 
   saveBtn.addEventListener("click", async (e) => {
@@ -210,14 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (photoFile) {
       finalImage = await fileToBase64(photoFile);
     } else if (editingRecipeId) {
-      const all = JSON.parse(localStorage.getItem("recipes")) || [];
+      const all = loadRecipes();
       const oldRecipe = all.find((r) => r.id === editingRecipeId);
       finalImage = oldRecipe?.image || defaultImage;
     } else {
       finalImage = defaultImage;
     }
 
-    await fetchIngredientsDB();
+    if (!ingredientsDBCache) await fetchIngredientsDB();
 
     let totalCalories = 0;
     const ingredientsWithCals = ingredients.map((it) => {
@@ -231,9 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     totalCalories = Math.round(totalCalories);
 
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const currentUser = getCurrentUser();
     const userId = currentUser?.id;
-    const recipes = JSON.parse(localStorage.getItem("recipes")) || [];
+    const recipes = loadRecipes();
 
     if (editingRecipeId) {
       const idx = recipes.findIndex((r) => r.id === editingRecipeId);
@@ -263,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    localStorage.setItem("recipes", JSON.stringify(recipes));
+    saveRecipes(recipes);
     closeModal();
     renderRecipes(getUserRecipes());
   });
@@ -306,11 +302,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       card.querySelector(".delete-btn").addEventListener("click", (e) => {
         e.stopPropagation();
-        const all = JSON.parse(localStorage.getItem("recipes")) || [];
-        localStorage.setItem(
-          "recipes",
-          JSON.stringify(all.filter((x) => x.id !== r.id))
-        );
+        const all = loadRecipes();
+        saveRecipes(all.filter((x) => x.id !== r.id));
         renderRecipes(getUserRecipes());
       });
 
@@ -334,12 +327,8 @@ document.addEventListener("DOMContentLoaded", () => {
     categorySelect.value = recipe.category;
     videoInput.value = recipe.video || "";
 
-    recipe.ingredients.forEach((i) =>
-      ingredientsList.appendChild(createIngredientRow(i.name, i.weight))
-    );
-    recipe.steps.forEach((s) =>
-      stepsList.appendChild(createStepRow(s.title, s.desc))
-    );
+    recipe.ingredients.forEach((i) => ingredientsList.appendChild(createIngredientRow(i.name, i.weight)));
+    recipe.steps.forEach((s) => stepsList.appendChild(createStepRow(s.title, s.desc)));
   };
 
   (function initSort() {
@@ -428,8 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
         : allRecipes;
 
       const minCal = Number(document.getElementById("calorie-min")?.value) || 0;
-      const maxCal =
-        Number(document.getElementById("calorie-max")?.value) || Number.MAX_SAFE_INTEGER;
+      const maxCal = Number(document.getElementById("calorie-max")?.value) || Number.MAX_SAFE_INTEGER;
 
       filtered = filtered.filter((r) => {
         const cal = Number(r.calories) || 0;
@@ -481,13 +469,7 @@ document.addEventListener("DOMContentLoaded", () => {
       mode = "step";
       currentStep = index;
 
-      [
-        ".ingredients-section",
-        ".recipe-video-section",
-        ".recipe-meta",
-        ".recipe-view-title",
-        ".recipe-view-image"
-      ].forEach((sel) => {
+      [".ingredients-section", ".recipe-video-section", ".recipe-meta", ".recipe-view-title", ".recipe-view-image"].forEach((sel) => {
         const el = viewModal.querySelector(sel);
         if (el) el.style.display = "none";
       });
@@ -511,9 +493,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const step = currentRecipe.steps[index];
       stepBlock.querySelector(".step-title").textContent = step?.title || `Шаг ${index + 1}`;
       stepBlock.querySelector(".step-desc").textContent = step?.desc || "";
-      stepBlock.querySelector(
-        ".step-index"
-      ).textContent = `Шаг ${index + 1} из ${currentRecipe.steps.length}`;
+      stepBlock.querySelector(".step-index").textContent = `Шаг ${index + 1} из ${currentRecipe.steps.length}`;
 
       updateArrows();
     };
@@ -523,13 +503,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentStep = -1;
       currentRecipe = recipe;
 
-      [
-        ".ingredients-section",
-        ".recipe-video-section",
-        ".recipe-meta",
-        ".recipe-view-title",
-        ".recipe-view-image"
-      ].forEach((sel) => {
+      [".ingredients-section", ".recipe-video-section", ".recipe-meta", ".recipe-view-title", ".recipe-view-image"].forEach((sel) => {
         const el = viewModal.querySelector(sel);
         if (el) el.style.display = "";
       });
@@ -537,14 +511,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const stepBlock = viewModal.querySelector(".step-view");
       if (stepBlock) stepBlock.remove();
 
-      viewModal.querySelector(".recipe-view-image").src =
-        recipe.image || defaultImage;
-
+      viewModal.querySelector(".recipe-view-image").src = recipe.image || defaultImage;
       viewModal.querySelector(".recipe-view-title").textContent = recipe.name;
 
-      viewModal.querySelector(
-        ".recipe-meta"
-      ).innerHTML = `
+      viewModal.querySelector(".recipe-meta").innerHTML = `
         <span class="category">Категория: ${recipe.category}</span>
         <span class="calories">Калорийность: ${recipe.calories ?? "—"} ккал</span>
         <span class="steps">Количество шагов: ${recipe.steps.length}</span>
@@ -562,16 +532,13 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
         `;
         const rows = recipe.ingredients
-          .map(
-            (i) => `
-          <li>
-            <span>${i.name}</span>
-            <span>${i.weight}</span>
-            <span>${i.caloriesPer100 ?? "—"}</span>
-            <span>${i.calories ?? "—"}</span>
-          </li>`
-          )
-          .join("");
+          .map((i) => `
+            <li>
+              <span>${i.name}</span>
+              <span>${i.weight}</span>
+              <span>${i.caloriesPer100 ?? "—"}</span>
+              <span>${i.calories ?? "—"}</span>
+            </li>`).join("");
         list.innerHTML = header + rows;
       } else {
         list.innerHTML = `<li><em style="color:#777;">Нет ингредиентов</em></li>`;
@@ -600,8 +567,7 @@ document.addEventListener("DOMContentLoaded", () => {
         nextArrow.style.display = currentRecipe.steps.length ? "flex" : "none";
       } else {
         prevArrow.style.display = "flex";
-        nextArrow.style.display =
-          currentStep < currentRecipe.steps.length - 1 ? "flex" : "none";
+        nextArrow.style.display = currentStep < currentRecipe.steps.length - 1 ? "flex" : "none";
       }
     };
 
@@ -636,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
       viewOverlay.classList.remove("hidden");
       document.body.style.overflow = "hidden";
     };
+
   })();
 
   (function initFilterAccordions() {
@@ -653,11 +620,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       header.addEventListener("click", () => {
         const isOpen = content.style.display === "block";
-
         content.style.display = isOpen ? "none" : "block";
         arrow.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
       });
     });
+
   })();
+
+  fetchIngredientsDB();
 
 });
