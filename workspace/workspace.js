@@ -521,8 +521,6 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
 
       const list = viewModal.querySelector(".ingredients-list-view");
-
-      if (recipe.ingredients.length) {
         const header = `
           <li class="header">
             <span>Ингредиент</span>
@@ -540,9 +538,6 @@ document.addEventListener("DOMContentLoaded", () => {
               <span>${i.calories ?? "—"}</span>
             </li>`).join("");
         list.innerHTML = header + rows;
-      } else {
-        list.innerHTML = `<li><em style="color:#777;">Нет ингредиентов</em></li>`;
-      }
 
       const video = viewModal.querySelector(".video-container");
       video.innerHTML = "";
