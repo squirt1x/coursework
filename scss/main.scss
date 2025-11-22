@@ -41,6 +41,8 @@ body {
 .hero {
   padding: 60px 0 120px;
   position: relative;
+  max-width: 1920px;
+  margin: 0 auto;
 
   background-image: url("/images/hero.png");
   background-repeat: no-repeat;
